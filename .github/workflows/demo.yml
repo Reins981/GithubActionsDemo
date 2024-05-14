@@ -60,4 +60,8 @@ jobs:
       - name: Output filename
         run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy
-        run: echo "Deploying..."
+        uses: ./.github/actions/deploy-s3-javascript
+        with:
+          bucket: my-bucket
+          bucket-region: us-west-1
+          dist-folder: dist
