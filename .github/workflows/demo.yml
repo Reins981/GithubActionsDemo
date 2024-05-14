@@ -51,17 +51,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Get Code
+        uses: actions/checkout@v3
       - name: Get Build Artifacts
         uses: actions/download-artifact@v3
         with:
           name: dist-files
+          path: ./dist
       - name: Output contents of dist
         run: ls
       - name: Output filename
         run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy
         uses: ./.github/actions/deploy-s3-javascript
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           bucket: my-bucket
-          bucket-region: us-west-1
-          dist-folder: dist
+          dist-folder: ./dist
